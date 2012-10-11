@@ -9,7 +9,7 @@ endfunction
 function vertfind#VertFindPattern(pattern, flags)
   let line = search(a:pattern, a:flags . 'nW')
   if line == 0
-    return "\<Esc>"
+    return "\<Plug>"	" bell in noremap
   endif
   let relative = line - line(".")
   if relative < 0
