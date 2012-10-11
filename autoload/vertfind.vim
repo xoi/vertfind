@@ -7,18 +7,23 @@ function vertfind#VertColPattern(pattern)
 endfunction
 
 function vertfind#VertFindPattern(pattern, flags)
-  let line = search(a:pattern, a:flags . 'nW')
-  if line == 0
-    return "\<Plug>"	" bell in noremap
-  endif
-  let relative = line - line(".")
+  let curline = line('.')
+  let i = 0
+  while i < v:count1
+    let line = search(a:pattern, a:flags . 'W')
+    if line == 0
+      return "\<Plug>"	" bell in noremap
+    endif
+    let i += 1
+  endwhile
+  let rhs = v:count ? repeat("\<Del>", len(v:count)) : ''	" clear count
+  let relative = line - curline
   if relative < 0
-    return -relative . 'k'
+    let rhs .= -relative . 'k'
   elseif relative > 0
-    return  relative . 'j'
-  else
-    return ''
+    let rhs .=  relative . 'j'
   endif
+  return rhs
 endfunction
 
 function vertfind#VertFind(pattern, flags)
