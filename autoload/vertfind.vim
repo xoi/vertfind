@@ -7,7 +7,7 @@ function vertfind#VertColPattern(pattern)
 endfunction
 
 function vertfind#VertFindPattern(pattern, flags)
-  let curline = line('.')
+  let view = winsaveview()
   let i = 0
   while i < v:count1
     let line = search(a:pattern, a:flags . 'W')
@@ -16,8 +16,9 @@ function vertfind#VertFindPattern(pattern, flags)
     endif
     let i += 1
   endwhile
+  call winrestview(view)	" map-<expr> does not restore curswant
   let rhs = v:count ? repeat("\<Del>", len(v:count)) : ''	" clear count
-  let relative = line - curline
+  let relative = line - view.lnum
   if relative < 0
     let rhs .= -relative . 'k'
   elseif relative > 0
