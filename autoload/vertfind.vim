@@ -7,16 +7,19 @@ function vertfind#VertColPattern(pattern)
 endfunction
 
 function vertfind#VertFindPattern(pattern, flags)
-  let view = winsaveview()
-  let i = 0
-  while i < v:count1
-    let line = search('\C' . a:pattern, a:flags . 'W')
-    if line == 0
-      return "\<Plug>"	" bell in noremap
-    endif
-    let i += 1
-  endwhile
-  call winrestview(view)	" map-<expr> does not restore curswant
+  try
+    let view = winsaveview()
+    let i = 0
+    while i < v:count1
+      let line = search('\C' . a:pattern, a:flags . 'W')
+      if line == 0
+	return "\<Plug>"	" bell in noremap
+      endif
+      let i += 1
+    endwhile
+  finally
+    call winrestview(view)	" map-<expr> does not restore curswant
+  endtry
   let rhs = v:count ? repeat("\<Del>", len(v:count)) : ''	" clear count
   let relative = line - view.lnum
   if relative < 0
