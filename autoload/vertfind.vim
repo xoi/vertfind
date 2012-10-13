@@ -1,7 +1,7 @@
 function vertfind#VertColPattern(pattern)
   let column = winsaveview().curswant + 1
   if column < 0
-    return a:pattern . '\($\)'
+    return a:pattern . '\_$'
   endif
   return '\%<' . (column + 1) . 'v' . a:pattern . '\%>' . column . 'v'
 endfunction
