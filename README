@@ -1,12 +1,12 @@
 Example setting:
 
-  noremap <expr> f<C-@> vertfind#VertFind(['\S', ['!', '\S']], '')
-  noremap <expr> F<C-@> vertfind#VertFind(['\S', ['!', '\S']], 'b')
-  noremap <expr> f<C-V> vertfind#VertFind('\S', '')
-  noremap <expr> F<C-V> vertfind#VertFind('\S', 'b')
-  noremap <expr> f<C-L> vertfind#VertFind(escape(nr2char(getchar()), '\'), '')
-  noremap <expr> F<C-L> vertfind#VertFind(escape(nr2char(getchar()), '\'), 'b')
-  noremap <expr> f<C-B> vertfind#VertFind('[^' . escape(getline(".")[col(".") - 1], '\') . ']', '')
-  noremap <expr> F<C-B> vertfind#VertFind('[^' . escape(getline(".")[col(".") - 1], '\') . ']', 'b')
+  noremap <expr> f<C-@> vertfind#Find(['\S', ['!', '\S']], '')
+  noremap <expr> F<C-@> vertfind#Find(['\S', ['!', '\S']], 'b')
+  noremap <expr> f<C-V> vertfind#Find('\S', '')
+  noremap <expr> F<C-V> vertfind#Find('\S', 'b')
+  noremap <expr> f<C-L> vertfind#Find(escape(nr2char(getchar()), '\'), '')
+  noremap <expr> F<C-L> vertfind#Find(escape(nr2char(getchar()), '\'), 'b')
+  noremap <expr> f<C-B> vertfind#Find('[^' . escape(getline(".")[col(".") - 1], '\') . ']', '')
+  noremap <expr> F<C-B> vertfind#Find('[^' . escape(getline(".")[col(".") - 1], '\') . ']', 'b')
   noremap f<C-A> f
   noremap F<C-A> F

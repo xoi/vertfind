@@ -1,4 +1,4 @@
-function vertfind#VertColPattern(pattern)
+function vertfind#ColPattern(pattern)
   let column = winsaveview().curswant + 1
   if column < 0
     return a:pattern . '\_$'
@@ -18,7 +18,7 @@ function vertfind#Pattern(pattern, flags)
 	let pat = a:pattern[i]
 	let cmp = '='
       endif
-      let pat = vertfind#VertColPattern(pat)
+      let pat = vertfind#ColPattern(pat)
       if i == 0 && cmp == '='
 	let ret = pat
       else
@@ -33,10 +33,10 @@ function vertfind#Pattern(pattern, flags)
     endwhile
     return ret
   endif
-  return vertfind#VertColPattern(a:pattern)
+  return vertfind#ColPattern(a:pattern)
 endfunction
 
-function vertfind#VertFindPattern(pattern, flags)
+function vertfind#FindPattern(pattern, flags)
   try
     let view = winsaveview()
     let i = 0
@@ -60,6 +60,6 @@ function vertfind#VertFindPattern(pattern, flags)
   return rhs
 endfunction
 
-function vertfind#VertFind(pattern, flags)
-  return vertfind#VertFindPattern(vertfind#Pattern(a:pattern, a:flags), a:flags)
+function vertfind#Find(pattern, flags)
+  return vertfind#FindPattern(vertfind#Pattern(a:pattern, a:flags), a:flags)
 endfunction
