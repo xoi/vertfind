@@ -1,7 +1,7 @@
 Example setting:
 
-  noremap <expr> f<C-@> vertfind#VertFindPattern(vertfind#VertColPattern('\S') . '\(.*\n.*' . vertfind#VertColPattern('\S') . '\)\@!', '')
-  noremap <expr> F<C-@> vertfind#VertFindPattern('\(' . vertfind#VertColPattern('\S') . '.*\n.*\)\@<!' . vertfind#VertColPattern('\S'), 'b')
+  noremap <expr> f<C-@> vertfind#VertFind(['\S', ['!', '\S']], '')
+  noremap <expr> F<C-@> vertfind#VertFind(['\S', ['!', '\S']], 'b')
   noremap <expr> f<C-V> vertfind#VertFind('\S', '')
   noremap <expr> F<C-V> vertfind#VertFind('\S', 'b')
   noremap <expr> f<C-L> vertfind#VertFind(escape(nr2char(getchar()), '\'), '')

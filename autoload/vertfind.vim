@@ -6,6 +6,36 @@ function vertfind#VertColPattern(pattern)
   return '\%<' . (column + 1) . 'v' . a:pattern . '\%>' . column . 'v'
 endfunction
 
+function vertfind#Pattern(pattern, flags)
+  if type(a:pattern) == type([])
+    let ret = a:flags =~# 'b' ? '\_$' : '^'
+    let i = 0
+    while i < len(a:pattern)
+      if type(a:pattern[i]) == type([])
+	let pat = a:pattern[i][1]
+	let cmp = a:pattern[i][0] =~ '!' ? '!' : '='
+      else
+	let pat = a:pattern[i]
+	let cmp = '='
+      endif
+      let pat = vertfind#VertColPattern(pat)
+      if i == 0 && cmp == '='
+	let ret = pat
+      else
+	let brs = '.*\(\n.*\)\{' . i . '}'
+	if a:flags =~# 'b'
+	  let ret .= '\(' . pat . brs . '\)\@<' . cmp
+	else
+	  let ret .= '\(' . brs . pat . '\)\@' . cmp
+	endif
+      endif
+      let i += 1
+    endwhile
+    return ret
+  endif
+  return vertfind#VertColPattern(a:pattern)
+endfunction
+
 function vertfind#VertFindPattern(pattern, flags)
   try
     let view = winsaveview()
@@ -31,5 +61,5 @@ function vertfind#VertFindPattern(pattern, flags)
 endfunction
 
 function vertfind#VertFind(pattern, flags)
-  return vertfind#VertFindPattern(vertfind#VertColPattern(a:pattern), a:flags)
+  return vertfind#VertFindPattern(vertfind#Pattern(a:pattern, a:flags), a:flags)
 endfunction
