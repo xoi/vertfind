@@ -8,22 +8,43 @@ endfunction
 
 function vertfind#Pattern(pattern, flags)
   if type(a:pattern) == type([])
-    let ret = a:flags =~# 'b' ? '\_$' : '^'
+    " find anchor
+    let anchor = 0
+    let i = 0
+    while i < len(a:pattern)
+      if type(a:pattern[i]) == type([])
+	let flg = a:pattern[i][0]
+	if flg =~ '<'
+	  let anchor = i + 1
+	  break
+	endif
+      endif
+      let i += 1
+    endwhile
+    " make pattern
+    let ret = ''
     let i = 0
     while i < len(a:pattern)
       if type(a:pattern[i]) == type([])
 	let pat = a:pattern[i][1]
-	let cmp = a:pattern[i][0] =~ '!' ? '!' : '='
+	let flg = a:pattern[i][0]
+	let cmp = flg =~ '!' ? '!' : '='
+	if flg =~# 'q'
+	  let pat = '\V' . escape(pat, '\') . '\m'
+	endif
       else
 	let pat = a:pattern[i]
 	let cmp = '='
       endif
       let pat = vertfind#ColPattern(pat)
-      if i == 0 && cmp == '='
-	let ret = pat
+      if i == anchor && cmp == '!'
+	let ret_anchor = a:flags =~# 'b' ? '\_$' : '^'
+      endif
+      if i == anchor && cmp == '='
+	let ret_anchor = pat
       else
-	let brs = '.*\(\n.*\)\{' . i . '}'
-	if a:flags =~# 'b'
+	let brs = '.*\(\n.*\)\{' . (i - anchor) . '}'
+	if (a:flags =~# 'b') != (i < anchor)
 	  let ret .= '\(' . pat . brs . '\)\@<' . cmp
 	else
 	  let ret .= '\(' . brs . pat . '\)\@' . cmp
@@ -31,9 +52,21 @@ function vertfind#Pattern(pattern, flags)
       endif
       let i += 1
     endwhile
-    return ret
+    return ret_anchor . ret
   endif
   return vertfind#ColPattern(a:pattern)
+endfunction
+
+function s:rhs(line)
+  let rhs = v:count ? repeat("\<Del>", len(v:count)) : ''	" clear count
+  " vertical motion
+  let relative = a:line - line('.')
+  if relative < 0
+    let rhs .= -relative . 'k'
+  elseif relative > 0
+    let rhs .=  relative . 'j'
+  endif
+  return rhs
 endfunction
 
 function vertfind#FindPattern(pattern, flags)
@@ -50,16 +83,50 @@ function vertfind#FindPattern(pattern, flags)
   finally
     call winrestview(view)	" map-<expr> does not restore curswant
   endtry
-  let rhs = v:count ? repeat("\<Del>", len(v:count)) : ''	" clear count
-  let relative = line - view.lnum
-  if relative < 0
-    let rhs .= -relative . 'k'
-  elseif relative > 0
-    let rhs .=  relative . 'j'
-  endif
-  return rhs
+  return s:rhs(line)
 endfunction
 
 function vertfind#Find(pattern, flags)
   return vertfind#FindPattern(vertfind#Pattern(a:pattern, a:flags), a:flags)
+endfunction
+
+function vertfind#SmartFind(flags)
+  let dir = a:flags =~# 'b' ? -1 : 1
+  let col_pat = vertfind#ColPattern('.')
+  let cursor_char = []
+  let lnum = line('.')
+  let i = 0
+  while i < 3
+    call add(cursor_char, matchstr(getline(lnum), col_pat))
+    let lnum += dir
+    let i += 1
+  endwhile
+  if cursor_char[0] =~ '\S' && (cursor_char[1] !~ '\S' || cursor_char[2] !~ '\S')
+    let pat = [['<!', '\S'], '\S']
+  elseif cursor_char[1] =~ '\s' && cursor_char[2] =~ '\s'
+    let pat = ['\s', ['!', '\s']]
+  elseif cursor_char[1] == '' && cursor_char[2] == ''
+    let pat = [['!', '.'], '.']
+  elseif cursor_char[1] ==# cursor_char[2]
+    let pat = [['q', cursor_char[1]], ['!q', cursor_char[1]]]
+  elseif cursor_char[1] !~ '\S' && cursor_char[2] !~ '\S'
+    let pat = [['!', '\S'], '\S']
+  elseif cursor_char[1] !~ '\S'
+    let pat = [['<!', '\S'], '\S']
+  elseif cursor_char[2] =~ '\s'
+    let pat = ['.', ['!', '.']]
+  elseif cursor_char[2] == ''
+    let pat = [['!', '\s'], '\s']
+  else
+    let pat = ['\S', ['!', '\S']]
+  endif
+  let ret = vertfind#Find(pat, a:flags)
+  if ret == "\<Plug>"	" not found
+    " find edge of file
+    let line = search('\%^\|\%$', a:flags . 'cnW')
+    if line != line('.')
+      return s:rhs(line)
+    endif
+  endif
+  return ret
 endfunction
