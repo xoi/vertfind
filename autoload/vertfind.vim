@@ -74,7 +74,7 @@ function vertfind#FindPattern(pattern, flags)
     let view = winsaveview()
     let i = 0
     while i < v:count1
-      let line = search('\C' . a:pattern, a:flags . 'W')
+      let line = search('\C\m' . a:pattern, a:flags . 'W')
       if line == 0
 	return "\<Plug>"	" bell in noremap
       endif
