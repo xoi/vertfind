@@ -10,6 +10,43 @@ The same is true in B's case.
   zzzxxxxxxzzz
   zzz B[z] zzz
 
+==============================================================================
+Functions:
+
+vertfind#Find({pattern} [, {flags}])
+		Search for vertical pattern {pattern}.
+
+		{pattern} is a String or a List.  See Vertical pattern.
+
+		{flags} is a String, which can contain these character flags:
+		'b'	search backward instead of forward
+
+vertfind#SmartFind([{flags}])
+		Search for vertical pattern which suit the situation.
+
+		{flags} is used like with vertfind#Find().
+
+==============================================================================
+Vertical pattern:
+
+Vertical pattern is a String or a List.
+The form is following.
+
+  {pattern}
+  [{pattern}, ...]
+  [[{flags}, {pattern}], ...]
+
+{pattern} is a String, which is a regexp pattern.
+When vertical pattern is a List this is a multiple lines pattern.
+Vertical pattern {pattern} is equivalent to [{pattern}].
+Vertical pattern [{pattern}, ...] is equivalent to [['', {pattern}], ...].
+
+{flags} is a String, which can contain these character flags:
+'<'	declare next element anchoring point
+'!'	invert the sense of matching
+'q'	interpret {pattern} as a fixed strings
+
+==============================================================================
 Example setting:
 
   noremap <expr> f<C-@> vertfind#Find(['\S', ['!', '\S']])
