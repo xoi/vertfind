@@ -86,12 +86,14 @@ function vertfind#FindPattern(pattern, flags)
   return s:rhs(line)
 endfunction
 
-function vertfind#Find(pattern, flags)
-  return vertfind#FindPattern(vertfind#Pattern(a:pattern, a:flags), a:flags)
+function vertfind#Find(pattern, ...)
+  let flags = a:0 < 1 ? '' : a:1
+  return vertfind#FindPattern(vertfind#Pattern(a:pattern, flags), flags)
 endfunction
 
-function vertfind#SmartFind(flags)
-  let dir = a:flags =~# 'b' ? -1 : 1
+function vertfind#SmartFind(...)
+  let flags = a:0 < 1 ? '' : a:1
+  let dir = flags =~# 'b' ? -1 : 1
   let col_pat = vertfind#ColPattern('.')
   let cursor_char = []
   let lnum = line('.')
@@ -120,10 +122,10 @@ function vertfind#SmartFind(flags)
   else
     let pat = ['\S', ['!', '\S']]
   endif
-  let ret = vertfind#Find(pat, a:flags)
+  let ret = vertfind#Find(pat, flags)
   if ret == "\<Plug>"	" not found
     " find edge of file
-    let line = search('\%^\|\%$', a:flags . 'cnW')
+    let line = search('\%^\|\%$', flags . 'cnW')
     if line != line('.')
       return s:rhs(line)
     endif

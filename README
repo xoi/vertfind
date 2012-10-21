@@ -4,7 +4,7 @@ For example the cursor moves from A to B by typing "<Leader>f" under following m
 A means position in the brackets to the right of 'A' character.
 The same is true in B's case.
 
-  noremap <expr> <Leader>f vertfind#Find('z', '')
+  noremap <expr> <Leader>f vertfind#Find('z')
 
   zzz A[x] zzz
   zzzxxxxxxzzz
@@ -12,15 +12,15 @@ The same is true in B's case.
 
 Example setting:
 
-  noremap <expr> f<C-@> vertfind#Find(['\S', ['!', '\S']], '')
+  noremap <expr> f<C-@> vertfind#Find(['\S', ['!', '\S']])
   noremap <expr> F<C-@> vertfind#Find(['\S', ['!', '\S']], 'b')
-  noremap <expr> f<C-V> vertfind#Find('\S', '')
+  noremap <expr> f<C-V> vertfind#Find('\S')
   noremap <expr> F<C-V> vertfind#Find('\S', 'b')
-  noremap <expr> f<C-L> vertfind#Find([['q', nr2char(getchar())]], '')
+  noremap <expr> f<C-L> vertfind#Find([['q', nr2char(getchar())]])
   noremap <expr> F<C-L> vertfind#Find([['q', nr2char(getchar())]], 'b')
-  noremap <expr> f<C-B> vertfind#Find('[^' . escape(getline(".")[col(".") - 1], '\') . ']', '')
+  noremap <expr> f<C-B> vertfind#Find('[^' . escape(getline(".")[col(".") - 1], '\') . ']')
   noremap <expr> F<C-B> vertfind#Find('[^' . escape(getline(".")[col(".") - 1], '\') . ']', 'b')
   noremap f<C-A> f
   noremap F<C-A> F
-  noremap <expr> <M-j> vertfind#SmartFind('')
+  noremap <expr> <M-j> vertfind#SmartFind()
   noremap <expr> <M-k> vertfind#SmartFind('b')
