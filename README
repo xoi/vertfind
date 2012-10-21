@@ -1,3 +1,15 @@
+vertfind is Vim plugin for vertical search.
+
+For example the cursor moves from A to B by typing "<Leader>f" under following mapping.
+A means position in the brackets to the right of 'A' character.
+The same is true in B's case.
+
+  noremap <expr> <Leader>f vertfind#Find('z', '')
+
+  zzz A[x] zzz
+  zzzxxxxxxzzz
+  zzz B[z] zzz
+
 Example setting:
 
   noremap <expr> f<C-@> vertfind#Find(['\S', ['!', '\S']], '')
