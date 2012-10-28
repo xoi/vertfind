@@ -30,7 +30,7 @@ vertfind#SmartFind([{flags}])
 Vertical pattern:
 
 Vertical pattern is a String or a List.
-The form is following.
+The forms are following.
 
   {pattern}
   [{pattern}, ...]
@@ -44,7 +44,7 @@ Vertical pattern [{pattern}, ...] is equivalent to [['', {pattern}], ...].
 {flags} is a String, which can contain these character flags:
 '<'	declare next element anchoring point
 '!'	invert the sense of matching
-'q'	interpret {pattern} as a fixed strings
+'q'	interpret {pattern} as a fixed string
 
 ==============================================================================
 Example setting:
