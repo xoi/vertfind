@@ -111,10 +111,8 @@ function vertfind#SmartFind(...)
     let pat = [['q', cursor_char[1]], ['!q', cursor_char[1]]]
   elseif cursor_char[1] !~ '\S'
     let pat = [['<!', '\S'], '\S']
-  elseif cursor_char[2] =~ '\s'
-    let pat = ['.', ['!', '.']]
-  elseif cursor_char[2] == ''
-    let pat = [['!', '\s'], '\s']
+  elseif cursor_char[2] !~ '\S'
+    let pat = [['<', '\S'], ['!', '\S']]
   else
     let pat = ['\S', ['!', '\S']]
   endif
