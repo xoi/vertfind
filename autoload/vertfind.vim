@@ -125,7 +125,7 @@ function vertfind#SmartFind(...)
   let ret = vertfind#Find(pat, flags)
   if ret == "\<Plug>"	" not found
     " find edge of file
-    let line = search('\%^\|\%$', flags . 'cnW')
+    let line = dir < 0 ? 1 : line('$')
     if line != line('.')
       return s:rhs(line)
     endif
